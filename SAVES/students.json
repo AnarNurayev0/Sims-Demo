@@ -1,0 +1,11 @@
+{
+    "S0005": {
+        "name": "Anar",
+        "surname": "Nurayev",
+        "age": 19,
+        "school": "School of Science and Engineering",
+        "department": "Computer Science",
+        "student_subjects": [],
+        "student_grades": {}
+    }
+}
