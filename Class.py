@@ -450,6 +450,7 @@ class _University:
     def add_subjects_to_student(self):
         if Other.is_student_file_exists():
             ...
+
         else:
             raise NotFoundError('The STUDENT file is not exist!')
 
