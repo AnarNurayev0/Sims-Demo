@@ -5,6 +5,40 @@
         "age": 19,
         "school": "School of Science and Engineering",
         "department": "Computer Science",
+        "accepted_year": 2026,
+        "student_subjects": [
+            "OOP",
+            "Web"
+        ],
+        "student_grades": {}
+    },
+    "S0007": {
+        "name": "Nihad",
+        "surname": "Masmaliyev",
+        "age": 20,
+        "school": "School of Humanities, Education and Social Sciences",
+        "department": "English Language and Literature",
+        "accepted_year": 2026,
+        "student_subjects": [],
+        "student_grades": {}
+    },
+    "S0008": {
+        "name": "Ulvi",
+        "surname": "Ilyasov",
+        "age": 43,
+        "school": "Graduate School of Economics and Business",
+        "department": "Applied Economics",
+        "accepted_year": 2026,
+        "student_subjects": [],
+        "student_grades": {}
+    },
+    "S10000": {
+        "name": "Rand",
+        "surname": "Randoglu",
+        "age": 99,
+        "school": "School of Humanities, Education and Social Sciences",
+        "department": "Languages and Literatures",
+        "accepted_year": 2026,
         "student_subjects": [],
         "student_grades": {}
     }

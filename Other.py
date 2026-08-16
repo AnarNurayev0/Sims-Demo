@@ -172,11 +172,11 @@ def department_check(school_value, department_value):
 def exiting():
 
     print('\nGoodbye!')
-    print('Exiting', end='')
+    print('Exiting', end='', flush=True)
 
     for i in range(3):
         time.sleep(0.5)
-        print('.', end='')
+        print('.', end='', flush=True)
 
 #_______________________________________________________________________________________#
 
@@ -217,3 +217,8 @@ def get_time(tm):
             return TIME[5]
         case _:
             return None
+
+#_______________________________________________________________________________________#
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')

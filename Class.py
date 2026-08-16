@@ -1,3 +1,5 @@
+from cmath import exp
+
 from Exceptions import InvalidGradeError, EnrollmentError, NotFoundError
 from abc import ABC, abstractmethod
 import Other
@@ -287,9 +289,9 @@ class _University:
                             print()
                             print("Please enter valid name, surname, age, school and salary")
                             print()
-                            name = input('Enter the name of the student you want to add : ').strip().capitalize()
-                            surname = input('Enter the surname of the student you want to add : ').strip().capitalize()
-                            age = input('Enter the age of the student you want to add : ').strip()
+                            name = input('Enter the name of the teacher you want to add : ').strip().capitalize()
+                            surname = input('Enter the surname of the teacher you want to add : ').strip().capitalize()
+                            age = input('Enter the age of the teacher you want to add : ').strip()
                             schools_list = list(Other.School)
                             print("Schools 🠛")
                             for i, s in enumerate(schools_list, start=1):
@@ -314,7 +316,7 @@ class _University:
                                 if dept_enum_class is None:
                                     print("Something went wrong with the selected school, please try again!")
                                 else:
-                                    salary = input('Enter the salary of the teacher you want to add : ').strip()
+                                    salary = input('Enter the salary($) of the teacher you want to add : ').strip()
 
                                     try:
                                         salary_int = int(salary)
@@ -377,56 +379,72 @@ class _University:
     #
 
     def delete_teacher(self):
-        if Other.is_teacher_file_exists():
+        if Other.is_teacher_file_exists() and os.path.getsize(PATH_TEACHERS) > 0:
             rand = [ ]
             with open(PATH_TEACHERS, 'r') as file:
                 teachers = json.load(file)
                 rand = [teacher for teacher in teachers]
+                # print(rand)
             if not rand:
-                print('No teachers found to delete!')
+                print('No teacher(s) found to delete!')
                 sys.exit()
             else:
                 while True:
                     print('----------------------------------------------')
                     print()
+
+                    all_ids = []
+                    teachers = {}
+                    with open(PATH_TEACHERS, 'r') as file:
+                        teachers = json.load(file)
+                        all_ids = [teacher for teacher in teachers]
+
                     delete_int = -1
                     valid_delete_count = False
                     while not valid_delete_count:
                         delete_count = input('Enter the number of teacher(s) to delete : ')
                         try:
                             delete_count = int(delete_count)
-                            if 0 < delete_count:
+                            if delete_count <= 0:
+                                print("Input must be a valid positive number!")
+                            elif delete_count > len(all_ids):
+                                print('There are less teacher(s) than that you want to delete!')
+                            else:
                                 delete_int = delete_count
                                 valid_delete_count = True
-                            else:
-                                print("Input must be a valid positive number!")
                         except ValueError:
                             print("Input must be a valid positive number!")
-                    all_ids = []
-                    teachers = {}
+
                     count = 1
-                    with open(PATH_TEACHERS, 'r') as file:
-                        teachers = json.load(file)
-                        all_ids = [teacher for teacher in teachers]
-                        if teachers:
-                            print('All Teachers 🠛')
-                            for teacher in teachers:
-                                print(
-                                    f'{count}-{teacher} {teachers[teacher]['name']} {teachers[teacher]['surname']} {teachers[teacher]['age']} | {teachers[teacher]['school']} - {teachers[teacher]['accepted_year']}')
-                                count += 1
-                        else:
-                            print('No teacher(s) found!')
+                    if teachers:
+                        print('All Teachers 🠛')
+                        for teacher in teachers:
+                            print(
+                                f'{count}-{teacher} {teachers[teacher]['name']} {teachers[teacher]['surname']} {teachers[teacher]['age']} | {teachers[teacher]['school']}/{teachers[teacher]['salary']} - {teachers[teacher]['accepted_year']}')
+                            count += 1
+                    else:
+                        print('No teacher(s) found!')
                     print()
                     delete = False
                     with open(PATH_TEACHERS, 'w') as file:
-                        for i in range(delete_int):
-                            id = input("Enter the id of the teacher you want to delete (exp : S0000) : ")
+                        ct = 0
+                        tries = 0
+                        while ct < delete_int:
+                            id = input("Enter the id of the teacher you want to delete (exp : T1234) : ")
+                            # print(all_ids)
                             if id in all_ids:
                                 teachers.pop(id)
+                                ct += 1
                                 delete = True
                             else:
                                 print('Teacher not found!')
-                                i += 1
+                                tries += 1
+                                if tries > 3:
+                                    print('Too many tries!')
+                                    print('Please try again')
+                                    json.dump(teachers, file, indent=4)
+                                    Other.exiting()
+                                    return
                         json.dump(teachers, file, indent=4)
                         if delete:
                             print("\nTeacher(s) deleted successfully\n")
@@ -448,17 +466,147 @@ class _University:
     #
 
     def add_subjects_to_student(self):
-        if Other.is_student_file_exists():
-            ...
-
+        if Other.is_student_file_exists() and os.path.getsize(PATH_STUDENTS) > 0:
+            rand = []
+            with open(PATH_STUDENTS, 'r') as file:
+                students = json.load(file)
+                rand = [student for student in students]
+            if not rand:
+                print('No student(s) found to make changes!')
+                sys.exit()
+            all_ids = []
+            while True:
+                print('-------------------------------------------')
+                print()
+                tries = 1
+                students = {}
+                with open(PATH_STUDENTS, 'r') as file:
+                    students = json.load(file)
+                    all_ids = [student for student in students]
+                change_int = -1
+                valid_change_count = False
+                while not valid_change_count:
+                    change_count = input('Enter the number of student(s) that you want to make changes : ')
+                    try:
+                        change_count = int(change_count)
+                        if change_count <= 0:
+                            print("Input must be a valid positive number!")
+                            tries+=1
+                        elif change_count > len(all_ids):
+                            print('There are less student(s) than that you want to make changes!')
+                            tries += 1
+                        else:
+                            change_int = change_count
+                            valid_change_count = True
+                        if tries > 3:
+                            print('Too many tries!')
+                            Other.exiting()
+                            return
+                    except ValueError:
+                        print("Input must be a valid positive number!")
+                count = 1
+                if students:
+                    print('All Student(s) 🠛')
+                    for student in students:
+                        subjects = students[student]['student_subjects']
+                        print(f'{count}-{student} {students[student]['name']} {students[student]['surname']} {students[student]['age']} | {students[student]['school']}/{students[student]['department']}')
+                        if not subjects:
+                            print('No subject(s) found!')
+                        else:
+                            count_subjects = 1
+                            for subject in subjects:
+                                print(f'{count_subjects} -> {subject}')
+                                count_subjects += 1
+                    change = False
+                    with open(PATH_STUDENTS, 'r') as file:
+                        students = json.load(file)
+                    with open(PATH_STUDENTS, 'w') as file:
+                        Other.clear_screen()
+                        print('---------------------------------------------------')
+                        ct = 0
+                        tries = 1
+                        subjects_int = -1
+                        while ct < change_int:
+                            tries_subject = 1
+                            id = input("Enter the id of the student you want to add subject(s) (exp : S1234) : ")
+                            if id in all_ids:
+                                okay = False
+                                while not okay:
+                                    subject_count = input('Enter the number of subject(s) you want to add to this student : ')
+                                    try:
+                                        int(subject_count)
+                                        if int(subject_count) > 0:
+                                            subjects_int = int(subject_count)
+                                            okay = True
+                                        else:
+                                            print('Input must be a valid positive integer!')
+                                            tries_subject += 1
+                                    except ValueError:
+                                        print("Input must be a valid positive integer!")
+                                        tries_subject += 1
+                                    if tries_subject > 3:
+                                        print('Too many tries!')
+                                        print('Please try again')
+                                        json.dump(students, file, indent=4)
+                                        Other.exiting()
+                                        return
+                                ct_subject = 0
+                                all_subjects = students[id]['student_subjects']
+                                while ct_subject < subjects_int:
+                                    Other.clear_screen()
+                                    print('-------------------------------------------------------')
+                                    new_subject = input('Enter the new subject you want to add to this student : ')
+                                    ct_subject += 1
+                                    change = True
+                                    all_subjects.append(new_subject)
+                                students[id]['student_subjects'] = all_subjects
+                                ct += 1
+                            else:
+                                print('Student not found!')
+                                tries += 1
+                                if tries > 3:
+                                    print('Too many tries!')
+                                    print('Please try again')
+                                    json.dump(students, file, indent=4)
+                                    Other.exiting()
+                                    return
+                        json.dump(students, file, indent=4)
+                        if change:
+                            print("\nSubject(s) added successfully\n")
+                        else:
+                            print("\nSubject(s) not added\n")
+                    print('You want to add more subject(s) now?\n')
+                    ifyesno = False
+                    while not ifyesno:
+                        yesno = input('YES or NO? (Y/N) : ')
+                        if yesno == 'Y' or yesno == 'y':
+                            self.add_subjects_to_student()
+                            ifyesno = True
+                        elif yesno == 'N' or yesno == 'n':
+                            print('\nSee you later !\n')
+                            ifyesno = True
+                            sys.exit()
+                        else:
+                            print('Please enter valid option!')
+                else:
+                    print('No student(s) found!')
+                    print('Please try again!')
+                    Other.exiting()
+                    return
         else:
             raise NotFoundError('The STUDENT file is not exist!')
 
+#_______________________________________________________________________________________#
+
+def main():
+        uni = _University()
+        # uni.add_student()
+        # uni.show_student()
+        # uni.delete_student()
+        # uni.show_teacher()
+        # uni.add_teacher()
+        # uni.delete_teacher()
+        # uni.add_subjects_to_student()
+
 if __name__ == '__main__':
-    uni = _University()
-    # uni.add_student()
-    # uni.show_student()
-    # uni.delete_student()
-    # uni.show_teacher()
-    # uni.add_teacher()
-    # uni.delete_teacher()
+    main()

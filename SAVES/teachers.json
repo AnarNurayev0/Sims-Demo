@@ -1,1 +1,29 @@
-{}
+{
+    "T0005": {
+        "name": "Eli",
+        "surname": "Memmedov",
+        "age": 43,
+        "school": "School of Science and Engineering",
+        "accepted_year": 2026,
+        "teacher_subjects": [],
+        "salary": 3000
+    },
+    "T0006": {
+        "name": "Musa",
+        "surname": "Davudov",
+        "age": 22,
+        "school": "School of Humanities, Education and Social Sciences",
+        "accepted_year": 2026,
+        "teacher_subjects": [],
+        "salary": 1400
+    },
+    "T0007": {
+        "name": "Emine",
+        "surname": "Babayeva",
+        "age": 34,
+        "school": "Graduate School of Science, Art and Technology",
+        "accepted_year": 2026,
+        "teacher_subjects": [],
+        "salary": 2050
+    }
+}
