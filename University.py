@@ -1,7 +1,6 @@
 from Exceptions import NotFoundError
 import Other
 import json
-import sys
 import os
 
 PATH_STUDENTS = 'SAVES/students.json'; PATH_TEACHERS = 'SAVES/teachers.json'; PATH_SAVES = 'SAVES'; PATH_IDS = 'IDS'
@@ -53,8 +52,10 @@ class _University:
                             print(f'{grade} -> {grades[grade]}')
                     print()
                     count+=1
+            return
         else:
             raise NotFoundError('The STUDENT file is not exist!')
+
 
     #
 
@@ -203,7 +204,7 @@ class _University:
                         self.add_student()
                     elif yesno == 'N' or yesno == 'n':
                         print('\nSee you later !\n')
-                        sys.exit()
+                        return
                     else:
                         print('Please enter valid option!')
         else:
@@ -217,7 +218,7 @@ class _University:
                 students = json.load(file)
             if not students:
                 print('No students found to change!')
-                sys.exit()
+                return
             else:
                 while True:
                     print('----------------------------------------------')
@@ -361,7 +362,6 @@ class _University:
                                     json.dump(students, file, indent=4)
                                 Other.exiting()
                                 return
-
                     with open(PATH_STUDENTS, 'w') as file:
                         json.dump(students, file, indent=4)
                     if change:
@@ -376,7 +376,7 @@ class _University:
                             self.change_student()
                         elif yesno == 'N' or yesno == 'n':
                             print('\nSee you later !\n')
-                            sys.exit()
+                            return
                         else:
                             print('Please enter valid option!')
         else:
@@ -392,7 +392,7 @@ class _University:
                 all_ids = [student for student in students]
             if not rand:
                 print('No students found to delete!')
-                sys.exit()
+                return
             else:
                 while True:
                     print('----------------------------------------------')
@@ -443,7 +443,7 @@ class _University:
                             self.delete_student()
                         elif yesno == 'N' or yesno == 'n':
                             print('\nSee you later !\n')
-                            sys.exit()
+                            return
                         else:
                             print('Please enter valid option!')
         else:
@@ -605,7 +605,7 @@ class _University:
                         self.add_student()
                     elif yesno == 'N' or yesno == 'n':
                         print('\nSee you later !\n')
-                        sys.exit()
+                        return
                     else:
                         print('Please enter valid option!')
         else:
@@ -619,7 +619,7 @@ class _University:
                 teachers = json.load(file)
             if not teachers:
                 print('No teachers found to change!')
-                sys.exit()
+                return
             else:
                 while True:
                     print('----------------------------------------------')
@@ -769,7 +769,7 @@ class _University:
                             self.change_teacher()
                         elif yesno == 'N' or yesno == 'n':
                             print('\nSee you later !\n')
-                            sys.exit()
+                            return
                         else:
                             print('Please enter valid option!')
         else:
@@ -783,10 +783,9 @@ class _University:
             with open(PATH_TEACHERS, 'r') as file:
                 teachers = json.load(file)
                 rand = [teacher for teacher in teachers]
-                # print(rand)
             if not rand:
                 print('No teacher(s) found to delete!')
-                sys.exit()
+                return
             else:
                 while True:
                     print('----------------------------------------------')
@@ -830,7 +829,6 @@ class _University:
                         tries = 0
                         while ct < delete_int:
                             id = input("Enter the id of the teacher you want to delete (exp : T1234) : ")
-                            # print(all_ids)
                             if id in all_ids:
                                 teachers.pop(id)
                                 ct += 1
@@ -856,7 +854,7 @@ class _University:
                             self.delete_student()
                         elif yesno == 'N' or yesno == 'n':
                             print('\nSee you later !\n')
-                            sys.exit()
+                            return
                         else:
                             print('Please enter valid option!')
         else:
@@ -872,7 +870,7 @@ class _University:
                 rand = [student for student in students]
             if not rand:
                 print('No student(s) found to make changes!')
-                sys.exit()
+                return
             all_ids = []
             while True:
                 print('-------------------------------------------')
@@ -984,7 +982,7 @@ class _University:
                         elif yesno == 'N' or yesno == 'n':
                             print('\nSee you later !\n')
                             ifyesno = True
-                            sys.exit()
+                            return
                         else:
                             print('Please enter valid option!')
                 else:
@@ -1005,7 +1003,7 @@ class _University:
                 rand = [teacher for teacher in teachers]
             if not rand:
                 print('No teacher(s) found to make changes!')
-                sys.exit()
+                return
             all_ids = []
             while True:
                 print('-------------------------------------------')
@@ -1120,7 +1118,7 @@ class _University:
                         elif yesno == 'N' or yesno == 'n':
                             print('\nSee you later !\n')
                             ifyesno = True
-                            sys.exit()
+                            return
                         else:
                             print('Please enter valid option!')
                 else:
@@ -1131,21 +1129,423 @@ class _University:
         else:
             raise NotFoundError('The TEACHER file is not exist!')
 
+    #
+
+    def add_grades_to_student(self):
+        if Other.is_student_file_exists() and os.path.getsize(PATH_STUDENTS) > 0:
+            rand = []
+            with open(PATH_STUDENTS, 'r') as file:
+                students = json.load(file)
+                rand = [student for student in students]
+            if not rand:
+                print('No student(s) found to make changes!')
+                return
+            all_ids = []
+            while True:
+                print('-------------------------------------------')
+                print()
+                tries = 1
+                students = {}
+                with open(PATH_STUDENTS, 'r') as file:
+                    students = json.load(file)
+                    all_ids = [student for student in students]
+                change_int = -1
+                valid_change_count = False
+                while not valid_change_count:
+                    change_count = input('Enter the number of student(s) that you want to make changes : ')
+                    try:
+                        change_count = int(change_count)
+                        if change_count <= 0:
+                            print("Input must be a valid positive number!")
+                            tries += 1
+                        elif change_count > len(all_ids):
+                            print('There are less student(s) than that you want to make changes!')
+                            tries += 1
+                        else:
+                            change_int = change_count
+                            valid_change_count = True
+                        if tries > 3:
+                            print('Too many tries!')
+                            Other.exiting()
+                            return
+                    except ValueError:
+                        print("Input must be a valid positive number!")
+                count = 1
+                if students:
+                    print('All Student(s) 🠛')
+                    for student in students:
+                        grades = students[student]['student_grades']
+                        print(
+                            f'{count}-{student} {students[student]['name']} {students[student]['surname']} {students[student]['age']} | {students[student]['school']}/{students[student]['department']}')
+                        if not grades:
+                            print('No grade(s) found!')
+                        else:
+                            for grade in grades:
+                                print(f'{grade} -> {grades[grade]}')
+                        count += 1
+                    change = False
+                    with open(PATH_STUDENTS, 'r') as file:
+                        students = json.load(file)
+                    with open(PATH_STUDENTS, 'w') as file:
+                        Other.clear_screen()
+                        print('---------------------------------------------------')
+                        ct = 0
+                        tries = 1
+                        grades_int = -1
+                        while ct < change_int:
+                            tries_grade = 1
+                            id = input("Enter the id of the student you want to add grade(s) (exp : S1234) : ")
+                            if id in all_ids:
+                                all_subjects = students[id]['student_subjects']
+                                if not all_subjects:
+                                    print('This student has no subject(s) to add a grade for!')
+                                    ct += 1
+                                    continue
+
+                                okay = False
+                                while not okay:
+                                    grade_count = input(
+                                        f'Enter the number of grade(s) you want to add to this student (max {len(all_subjects)}) : ')
+                                    try:
+                                        grade_count = int(grade_count)
+                                        if grade_count <= 0:
+                                            print('Input must be a valid positive integer!')
+                                            tries_grade += 1
+                                        elif grade_count > len(all_subjects):
+                                            print(
+                                                f'This student only has {len(all_subjects)} subject(s), you cannot add more grades than that!')
+                                            tries_grade += 1
+                                        else:
+                                            grades_int = grade_count
+                                            okay = True
+                                    except ValueError:
+                                        print("Input must be a valid positive integer!")
+                                        tries_grade += 1
+                                    if tries_grade > 3:
+                                        print('Too many tries!')
+                                        print('Please try again')
+                                        json.dump(students, file, indent=4)
+                                        Other.exiting()
+                                        return
+
+                                ct_grade = 0
+                                all_grades = students[id]['student_grades']
+                                while ct_grade < grades_int:
+                                    Other.clear_screen()
+                                    print('-------------------------------------------------------')
+                                    print('Subject(s) 🠛')
+                                    for i, subj in enumerate(all_subjects, start=1):
+                                        print(f'{i} -> {subj}')
+
+                                    subject = input(
+                                        'Enter the subject you want to add a grade for : ').strip().capitalize()
+
+                                    if subject not in all_subjects:
+                                        print('This subject is not assigned to this student, please add it first!')
+                                        continue
+
+                                    grade_ok = False
+                                    while not grade_ok:
+                                        grade = input(f'Enter the grade for {subject} (0-100) : ').strip()
+                                        try:
+                                            grade_int = int(grade)
+                                            if 0 <= grade_int <= 100:
+                                                all_grades[subject] = grade_int
+                                                grade_ok = True
+                                            else:
+                                                print('Grade must be between 0 and 100!')
+                                        except ValueError:
+                                            print('Grade must be a valid number!')
+
+                                    ct_grade += 1
+                                    change = True
+                                students[id]['student_grades'] = all_grades
+                                ct += 1
+                            else:
+                                print('Student not found!')
+                                tries += 1
+                                if tries > 3:
+                                    print('Too many tries!')
+                                    print('Please try again')
+                                    json.dump(students, file, indent=4)
+                                    Other.exiting()
+                                    return
+                        json.dump(students, file, indent=4)
+                        if change:
+                            print("\nGrade(s) added successfully\n")
+                        else:
+                            print("\nGrade(s) not added\n")
+                    print('You want to add more grade(s) now?\n')
+                    ifyesno = False
+                    while not ifyesno:
+                        yesno = input('YES or NO? (Y/N) : ')
+                        if yesno == 'Y' or yesno == 'y':
+                            self.add_grades_to_student()
+                            ifyesno = True
+                        elif yesno == 'N' or yesno == 'n':
+                            print('\nSee you later !\n')
+                            ifyesno = True
+                            return
+                        else:
+                            print('Please enter valid option!')
+                else:
+                    print('No student(s) found!')
+                    print('Please try again!')
+                    Other.exiting()
+                    return
+        else:
+            raise NotFoundError('The STUDENT file is not exist!')
+
+    #
+
+    def remove_subject_from_student(self):
+        if Other.is_student_file_exists() and os.path.getsize(PATH_STUDENTS) > 0:
+            rand = []
+            with open(PATH_STUDENTS, 'r') as file:
+                students = json.load(file)
+                rand = [student for student in students]
+            if not rand:
+                print('No student(s) found to make changes!')
+                return
+            all_ids = []
+            while True:
+                print('-------------------------------------------')
+                print()
+                tries = 1
+                students = {}
+                with open(PATH_STUDENTS, 'r') as file:
+                    students = json.load(file)
+                    all_ids = [student for student in students]
+                change_int = -1
+                valid_change_count = False
+                while not valid_change_count:
+                    change_count = input('Enter the number of student(s) that you want to make changes : ')
+                    try:
+                        change_count = int(change_count)
+                        if change_count <= 0:
+                            print("Input must be a valid positive number!")
+                            tries += 1
+                        elif change_count > len(all_ids):
+                            print('There are less student(s) than that you want to make changes!')
+                            tries += 1
+                        else:
+                            change_int = change_count
+                            valid_change_count = True
+                        if tries > 3:
+                            print('Too many tries!')
+                            Other.exiting()
+                            return
+                    except ValueError:
+                        print("Input must be a valid positive number!")
+                count = 1
+                if students:
+                    print('All Student(s) 🠛')
+                    for student in students:
+                        subjects = students[student]['student_subjects']
+                        print(
+                            f'{count}-{student} {students[student]['name']} {students[student]['surname']} {students[student]['age']} | {students[student]['school']}/{students[student]['department']}')
+                        if not subjects:
+                            print('No subject(s) found!')
+                        else:
+                            count_subjects = 1
+                            for subject in subjects:
+                                print(f'{count_subjects} -> {subject}')
+                                count_subjects += 1
+                        count += 1
+                    change = False
+                    with open(PATH_STUDENTS, 'r') as file:
+                        students = json.load(file)
+                    with open(PATH_STUDENTS, 'w') as file:
+                        Other.clear_screen()
+                        print('---------------------------------------------------')
+                        ct = 0
+                        tries = 1
+                        while ct < change_int:
+                            id = input(
+                                "Enter the id of the student you want to remove subject(s) from (exp : S1234) : ")
+                            if id in all_ids:
+                                all_subjects = students[id]['student_subjects']
+                                if not all_subjects:
+                                    print('This student has no subject(s) to remove!')
+                                else:
+                                    print('Current subject(s) 🠛')
+                                    for i, subj in enumerate(all_subjects, start=1):
+                                        print(f'{i} -> {subj}')
+                                    subject_to_remove = input(
+                                        'Enter the subject you want to remove : ').strip().capitalize()
+                                    if subject_to_remove in all_subjects:
+                                        all_subjects.remove(subject_to_remove)
+                                        students[id]['student_subjects'] = all_subjects
+
+                                        all_grades = students[id]['student_grades']
+                                        if subject_to_remove in all_grades:
+                                            del all_grades[subject_to_remove]
+                                            students[id]['student_grades'] = all_grades
+
+                                        change = True
+                                        print(f'{subject_to_remove} removed successfully!')
+                                    else:
+                                        print('Subject not found for this student!')
+                                ct += 1
+                            else:
+                                print('Student not found!')
+                                tries += 1
+                                if tries > 3:
+                                    print('Too many tries!')
+                                    print('Please try again')
+                                    json.dump(students, file, indent=4)
+                                    Other.exiting()
+                                    return
+                        json.dump(students, file, indent=4)
+                        if change:
+                            print("\nSubject(s) removed successfully\n")
+                        else:
+                            print("\nSubject(s) not removed\n")
+                    print('You want to remove more subject(s) now?\n')
+                    ifyesno = False
+                    while not ifyesno:
+                        yesno = input('YES or NO? (Y/N) : ')
+                        if yesno == 'Y' or yesno == 'y':
+                            self.remove_subject_from_student()
+                            ifyesno = True
+                        elif yesno == 'N' or yesno == 'n':
+                            print('\nSee you later !\n')
+                            ifyesno = True
+                            return
+                        else:
+                            print('Please enter valid option!')
+                else:
+                    print('No student(s) found!')
+                    print('Please try again!')
+                    Other.exiting()
+                    return
+        else:
+            raise NotFoundError('The STUDENT file is not exist!')
+
+    #
+
+    def remove_subject_from_teacher(self):
+        if Other.is_teacher_file_exists() and os.path.getsize(PATH_TEACHERS) > 0:
+            rand = []
+            with open(PATH_TEACHERS, 'r') as file:
+                teachers = json.load(file)
+                rand = [teacher for teacher in teachers]
+            if not rand:
+                print('No teacher(s) found to make changes!')
+                return
+            all_ids = []
+            while True:
+                print('-------------------------------------------')
+                print()
+                tries = 1
+                teachers = {}
+                with open(PATH_TEACHERS, 'r') as file:
+                    teachers = json.load(file)
+                    all_ids = [teacher for teacher in teachers]
+                change_int = -1
+                valid_change_count = False
+                while not valid_change_count:
+                    change_count = input('Enter the number of teacher(s) that you want to make changes : ')
+                    try:
+                        change_count = int(change_count)
+                        if change_count <= 0:
+                            print("Input must be a valid positive number!")
+                            tries += 1
+                        elif change_count > len(all_ids):
+                            print('There are less teacher(s) than that you want to make changes!')
+                            tries += 1
+                        else:
+                            change_int = change_count
+                            valid_change_count = True
+                        if tries > 3:
+                            print('Too many tries!')
+                            Other.exiting()
+                            return
+                    except ValueError:
+                        print("Input must be a valid positive number!")
+                count = 1
+                if teachers:
+                    print('All Teacher(s) 🠛')
+                    for teacher in teachers:
+                        subjects = teachers[teacher]['teacher_subjects']
+                        print(
+                            f'{count}-{teacher} {teachers[teacher]['name']} {teachers[teacher]['surname']} {teachers[teacher]['age']} | {teachers[teacher]['salary']}$ - {teachers[teacher]['school']}')
+                        if not subjects:
+                            print('No subject(s) found!')
+                        else:
+                            count_subjects = 1
+                            for subject in subjects:
+                                print(f'{count_subjects} -> {subject}')
+                                count_subjects += 1
+                        count += 1
+                    change = False
+                    with open(PATH_TEACHERS, 'r') as file:
+                        teachers = json.load(file)
+                    with open(PATH_TEACHERS, 'w') as file:
+                        Other.clear_screen()
+                        print('---------------------------------------------------')
+                        ct = 0
+                        tries = 1
+                        while ct < change_int:
+                            id = input(
+                                "Enter the id of the teacher you want to remove subject(s) from (exp : T1234) : ")
+                            if id in all_ids:
+                                all_subjects = teachers[id]['teacher_subjects']
+                                if not all_subjects:
+                                    print('This teacher has no subject(s) to remove!')
+                                else:
+                                    print('Current subject(s) 🠛')
+                                    for i, subj in enumerate(all_subjects, start=1):
+                                        print(f'{i} -> {subj}')
+                                    subject_to_remove = input(
+                                        'Enter the subject you want to remove : ').strip().capitalize()
+                                    if subject_to_remove in all_subjects:
+                                        all_subjects.remove(subject_to_remove)
+                                        teachers[id]['teacher_subjects'] = all_subjects
+                                        change = True
+                                        print(f'{subject_to_remove} removed successfully!')
+                                    else:
+                                        print('Subject not found for this teacher!')
+                                ct += 1
+                            else:
+                                print('Teacher not found!')
+                                tries += 1
+                                if tries > 3:
+                                    print('Too many tries!')
+                                    print('Please try again')
+                                    json.dump(teachers, file, indent=4)
+                                    Other.exiting()
+                                    return
+                        json.dump(teachers, file, indent=4)
+                        if change:
+                            print("\nSubject(s) removed successfully\n")
+                        else:
+                            print("\nSubject(s) not removed\n")
+                    print('You want to remove more subject(s) now?\n')
+                    ifyesno = False
+                    while not ifyesno:
+                        yesno = input('YES or NO? (Y/N) : ')
+                        if yesno == 'Y' or yesno == 'y':
+                            self.remove_subject_from_teacher()
+                            ifyesno = True
+                        elif yesno == 'N' or yesno == 'n':
+                            print('\nSee you later !\n')
+                            ifyesno = True
+                            return
+                        else:
+                            print('Please enter valid option!')
+                else:
+                    print('No teacher(s) found!')
+                    print('Please try again!')
+                    Other.exiting()
+                    return
+        else:
+            raise NotFoundError('The TEACHER file is not exist!')
+
+    #
 
 #_______________________________________________________________________________________#
 
-def main():
-        uni = _University()
-        # uni.add_student()
-        # uni.show_student()
-        # uni.delete_student()
-        # uni.show_teacher()
-        # uni.add_teacher()
-        # uni.delete_teacher()
-        # uni.add_subjects_to_student()
-        # uni.change_student()
-        # uni.change_teacher()
-        # uni.add_subjects_to_teachers()
-
-if __name__ == '__main__':
-    main()
+def create_uni() -> _University:
+    uni = _University()
+    return uni
