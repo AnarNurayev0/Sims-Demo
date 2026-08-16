@@ -1,12 +1,15 @@
 {
     "T0005": {
-        "name": "Eli",
-        "surname": "Memmedov",
-        "age": 43,
-        "school": "School of Science and Engineering",
+        "name": "Mehmet",
+        "surname": "Babayev",
+        "age": 44,
+        "school": "School of Humanities, Education and Social Sciences",
         "accepted_year": 2026,
-        "teacher_subjects": [],
-        "salary": 3000
+        "teacher_subjects": [
+            "OOP",
+            "Web"
+        ],
+        "salary": 35000
     },
     "T0006": {
         "name": "Musa",

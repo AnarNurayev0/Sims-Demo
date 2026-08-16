@@ -1,9 +1,9 @@
-from enum import Enum, Flag, auto
+from enum import Enum
 import time
 import os
 import re
 
-PATH_STUDENTS = 'SAVES/students.json'; PATH_TEACHERS = 'SAVES/teachers.json'
+PATH_STUDENTS = 'SAVES/students.json'; PATH_TEACHERS = 'SAVES/teachers.json'; PATH_SAVES = 'SAVES'; PATH_IDS = 'IDS'
 
 #_______________________________________________________________________________________#
 

@@ -31,15 +31,5 @@
         "accepted_year": 2026,
         "student_subjects": [],
         "student_grades": {}
-    },
-    "S10000": {
-        "name": "Rand",
-        "surname": "Randoglu",
-        "age": 99,
-        "school": "School of Humanities, Education and Social Sciences",
-        "department": "Languages and Literatures",
-        "accepted_year": 2026,
-        "student_subjects": [],
-        "student_grades": {}
     }
 }
